@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M.R. Tiny Houses | Idaho Built</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; }
+.wingmen-fullscreen {
+width: 100%;
+font-family: 'Inter', sans-serif;
+background: #ffffff;
+overflow-x: clip;
+color: #1a1a1a;
+}
+/* Sizes the prebuilt Tailwind 2 file does not include */
+.z-\[1000\] { z-index: 1000; }
+.text-\[10px\] { font-size: 10px; }
+.text-\[9px\] { font-size: 9px; }
+.tracking-\[0\.2em\] { letter-spacing: 0.2em; }
+.leading-\[0\.9\] { line-height: 0.9; }
+@media (min-width: 768px) { .md\:text-\[10px\] { font-size: 10px; } }
+.hero-overlay { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)); }
+.accent-border { border-top: 4px solid #d35400; }
+.text-accent { color: #d35400; }
+.bg-accent { background-color: #d35400; }
+.coming-soon-badge {
+background: #d35400;
+color: white;
+padding: 4px 12px;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: bold;
+border-radius: 4px;
+}
+/* FIXED MODAL ARCHITECTURE */
+.modal-overlay {
+display: none;
+position: fixed;
+inset: 0;
+backdrop-filter: blur(12px);
+background: rgba(0,0,0,0.9);
+z-index: 99999 !important;
+padding: 1rem;
+align-items: center;
+justify-content: center;
+}
+.modal-card {
+background: white;
+width: 100%;
+max-width: 1100px;
+height: 90vh; /* Locked height for mobile */
+border-radius: 1.5rem;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+position: relative;
+box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+@media (min-width: 1024px) {
+.modal-card {
+flex-direction: row;
+height: 80vh; /* Locked height for desktop */
+}
+}
+/* The Image Stage (The Black Box) */
+.image-stage {
+background: #000;
+width: 100%;
+height: 45%; /* Fixed portion of the card on mobile */
+position: relative;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+@media (min-width: 1024px) {
+.image-stage {
+width: 60%;
+height: 100%;
+}
+}
+.carousel-slide {
+width: 100%;
+height: 100%;
+object-fit: contain; /* Shrinks images to fit stage without jumping */
+display: none;
+touch-action: pan-y;
+}
+.carousel-slide.active { display: block; }
+.nav-btn {
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+background: rgba(255,255,255,0.1);
+color: white;
+padding: 10px;
+cursor: pointer;
+transition: 0.3s;
+z-index: 30;
+border-radius: 50%;
+width: 44px;
+height: 44px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.3); }
+.prev-btn { left: 15px; }
+.next-btn { right: 15px; }
+.image-counter {
+position: absolute;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background: rgba(0,0,0,0.6);
+color: white;
+padding: 4px 16px;
+border-radius: 20px;
+font-size: 0.7rem;
+font-weight: 800;
+z-index: 20;
+letter-spacing: 0.05em;
+}
+.modal-close-btn {
+position: absolute;
+top: 1rem;
+right: 1rem;
+z-index: 100000 !important;
+background: white;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: bold;
+box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+cursor: pointer;
+}
+/* Independent Text Scrolling area */
+.info-container {
+width: 100%;
+flex: 1;
+padding: 1.5rem;
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+text-align: left;
+background: white;
+}
+@media (min-width: 1024px) {
+.info-container {
+width: 40%;
+height: 100%;
+padding: 3.5rem;
+}
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.spec-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1rem;
+}
+.spec-item {
+border-bottom: 1px solid #f3f4f6;
+padding-bottom: 0.5rem;
+}
+.spec-label {
+font-size: 0.65rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+color: #9ca3af;
+font-weight: 700;
+margin-bottom: 1px;
+display: block;
+}
+.spec-val {
+font-size: 0.85rem;
+font-weight: 600;
+color: #111827;
+}
+.contact-btn { display: flex; flex-direction: column; border-radius: 1rem; padding: 1.5rem 1rem; transition: background .2s; }
+.contact-title { font-size: 1.25rem; font-weight: 800; text-transform: uppercase; }
+.contact-sub { font-size: .8rem; font-weight: 600; opacity: .8; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main class="wingmen-fullscreen">
+<!-- TOP CALL BAR -->
+<div class="bg-accent text-white py-3 px-6 text-center sticky top-0 z-[1000] shadow-md">
+<p class="text-xs md:text-sm font-bold uppercase tracking-widest">
+Questions? Speak with the Builder:
+<a href="tel:208-317-6732" class="underline hover:text-gray-100 transition ml-1 whitespace-nowrap">208-317-6732</a>
+</p>
+</div>
+<!-- HERO SECTION -->
+<header class="h-screen flex items-center justify-center text-center px-6 bg-cover bg-center relative"
+style="background-image: url('images/hero.jpg');">
+<div class="absolute inset-0 hero-overlay"></div>
+<div class="max-w-4xl relative z-10 text-white">
+<span class="tracking-widest uppercase text-sm font-bold mb-4 block tracking-[0.2em]">Hand-Crafted in Clifton, Idaho</span>
+<h1 class="text-5xl md:text-8xl font-extrabold mb-6 leading-tight uppercase tracking-tighter">Your Adventure,<br><span class="text-accent">Built to Last.</span></h1>
+<p class="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto font-medium">High-quality tiny homes designed by an experienced home builder to withstand the rugged beauty of the West.</p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<a href="#contact" class="bg-accent text-white px-10 py-4 rounded font-bold text-lg hover:bg-orange-700 transition uppercase tracking-widest">Start Your Build</a>
+<a href="#models" class="bg-white text-gray-900 px-10 py-4 rounded font-bold text-lg hover:bg-gray-100 transition uppercase tracking-widest">View Models</a>
+</div>
+</div>
+</header>
+<!-- THE M.R. TINY HOUSE STANDARD -->
+<section class="bg-gray-900 py-16 md:py-20 px-6 text-white overflow-hidden border-b border-gray-800">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
+<div class="text-left">
+<h2 class="text-3xl md:text-5xl font-extrabold tracking-tighter uppercase mb-4 leading-[0.9]">The M.R. Tiny House <br>Standard</h2>
+<p class="text-gray-400 text-base md:text-lg mb-8 leading-relaxed max-w-xl font-medium">
+We believe a home should be personal. That's why every M.R. Tiny House is hand-built by Rand and his team, ensuring a level of care and quality you won't find in a prefab. These are custom-crafted residences built for real people, not just units off an assembly line.
+</p>
+<div class="grid md:grid-cols-2 gap-x-8 gap-y-6 md:gap-y-10">
+<div>
+<h4 class="text-accent font-extrabold uppercase tracking-widest text-[10px] mb-2">Extreme Snow Load</h4>
+<p class="text-xs text-gray-400 leading-relaxed font-medium">Engineered for a 60 lb PSF rating—designed to easily handle over 4 feet of solid Idaho snowpack.</p>
+</div>
+<div>
+<h4 class="text-accent font-extrabold uppercase tracking-widest text-[10px] mb-2">Structural Insulation</h4>
+<p class="text-xs text-gray-400 leading-relaxed font-medium">2lb closed-cell spray foam adds immense rigidity to the frame and superior thermal protection.</p>
+</div>
+<div>
+<h4 class="text-accent font-extrabold uppercase tracking-widest text-[10px] mb-2">Full Utility Hookups</h4>
+<p class="text-xs text-gray-400 leading-relaxed font-medium">Standard 50 Amp electrical, 3" PVC sewer drains, and 20-gallon water heaters come standard.</p>
+</div>
+<div>
+<h4 class="text-accent font-extrabold uppercase tracking-widest text-[10px] mb-2">The "Shell" Option</h4>
+<p class="text-xs text-gray-400 leading-relaxed font-medium">Save money by having us handle the structural framing and rough-ins while you finish the interior.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 h-full">
+<div class="bg-gray-800 p-6 md:p-8 rounded-2xl text-center flex flex-col justify-center items-center h-40 md:h-52 border border-gray-700 shadow-2xl transition-all hover:border-gray-600">
+<p class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tighter">60 LB</p>
+<p class="text-[9px] md:text-[10px] uppercase text-gray-500 font-extrabold tracking-widest">PSF Snow Load Rating</p>
+</div>
+<div class="bg-gray-800 p-6 md:p-8 rounded-2xl text-center flex flex-col justify-center items-center h-40 md:h-52 border border-gray-700 shadow-2xl transition-all hover:border-gray-600">
+<p class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tighter">2lb</p>
+<p class="text-[9px] md:text-[10px] uppercase text-gray-500 font-extrabold tracking-widest">Closed Cell Foam</p>
+</div>
+<div class="bg-gray-800 p-6 md:p-8 rounded-2xl text-center flex flex-col justify-center items-center h-40 md:h-52 border border-gray-700 shadow-2xl transition-all hover:border-gray-600">
+<p class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tighter">50A</p>
+<p class="text-[9px] md:text-[10px] uppercase text-gray-500 font-extrabold tracking-widest">Power Capacity</p>
+</div>
+<div class="bg-gray-800 p-6 md:p-8 rounded-2xl text-center flex flex-col justify-center items-center h-40 md:h-52 border border-gray-700 shadow-2xl transition-all hover:border-gray-600">
+<p class="text-4xl md:text-5xl font-extrabold mb-2 tracking-tighter">500mi</p>
+<p class="text-[9px] md:text-[10px] uppercase text-gray-500 font-extrabold tracking-widest">Direct Delivery</p>
+</div>
+</div>
+</div>
+</section>
+<!-- FLAGSHIP MODELS -->
+<section id="models" class="py-24 px-6 max-w-7xl mx-auto text-center">
+<div class="mb-16">
+<h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900 tracking-tighter uppercase">The Lineup</h2>
+<p class="text-gray-500 max-w-xl mx-auto uppercase text-xs font-bold tracking-widest">Great quality at an affordable price.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-10 text-left">
+<div class="model-card accent-border bg-gray-50 overflow-hidden rounded-lg shadow-sm flex flex-col">
+<div class="h-64 bg-gray-200 overflow-hidden">
+<img src="images/69691785d01e748c63a6220b.png" alt="The Spruce" class="w-full h-full object-cover">
+</div>
+<div class="p-8">
+<h3 class="text-2xl font-bold uppercase tracking-tighter mb-1">The Spruce</h3>
+<p class="text-accent font-extrabold text-2xl mb-4">$99,000</p>
+<ul class="text-xs space-y-3 mb-8 text-gray-600 font-bold uppercase tracking-wider">
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Sq Ft:</span> <span>427 Total</span></li>
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Length:</span> <span>32'</span></li>
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Lofts:</span> <span>Dual</span></li>
+</ul>
+<button onclick="openModelModal(0)" class="block w-full text-center border-2 border-accent text-accent py-3 rounded-lg font-bold hover:bg-accent hover:text-white transition uppercase text-xs tracking-widest mb-3">View Full Specs</button>
+<button onclick="textRand('The Spruce')" class="block w-full text-center bg-gray-900 text-white py-3 rounded-lg font-bold hover:bg-black transition uppercase text-xs tracking-widest">Reserve This Build</button>
+</div>
+</div>
+<div class="model-card accent-border bg-gray-50 overflow-hidden rounded-lg shadow-sm flex flex-col">
+<div class="h-64 bg-gray-200 overflow-hidden"><img src="images/69c410ce76c882b4173cd528.jpg" alt="The Apache" class="w-full h-full object-cover"></div>
+<div class="p-8">
+<h3 class="text-2xl font-bold uppercase tracking-tighter mb-1">The Apache</h3>
+<p class="text-accent font-extrabold text-2xl mb-4">$89,000</p>
+<ul class="text-xs space-y-3 mb-8 text-gray-600 font-bold uppercase tracking-wider">
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Sq Ft:</span> <span>366 Total</span></li>
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Length:</span> <span>28'</span></li>
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Lofts:</span> <span>Two</span></li>
+</ul>
+<button onclick="openModelModal(1)" class="block w-full text-center border-2 border-accent text-accent py-3 rounded-lg font-bold hover:bg-accent hover:text-white transition uppercase text-xs tracking-widest mb-3">View Full Specs</button>
+<button onclick="textRand('The Apache')" class="block w-full text-center bg-gray-900 text-white py-3 rounded-lg font-bold hover:bg-black transition uppercase text-xs tracking-widest">Reserve This Build</button>
+</div>
+</div>
+<div class="model-card bg-gray-50 accent-border overflow-hidden rounded-lg shadow-sm flex flex-col relative">
+<div class="absolute top-4 right-4 coming-soon-badge z-10">Coming Soon</div>
+<div class="h-64 bg-gray-200 overflow-hidden"><img src="images/696915f6d8480848b1f72319.png" alt="The Ponderosa" class="w-full h-full object-cover"></div>
+<div class="p-8 text-left">
+<h3 class="text-2xl font-bold uppercase tracking-tighter mb-1">The Ponderosa</h3>
+<p class="text-gray-400 font-bold text-2xl mb-4 italic">Pricing TBA</p>
+<ul class="text-xs space-y-3 mb-8 text-gray-600 font-bold uppercase tracking-wider">
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Type:</span> <span>Single Story</span></li>
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Living:</span> <span>Rooted Model</span></li>
+<li class="flex justify-between border-b border-gray-200 pb-1"><span>Design:</span> <span>Over-Axle</span></li>
+</ul>
+<button onclick="openModelModal(2)" class="block w-full text-center border-2 border-gray-900 text-gray-900 py-3 rounded-lg font-bold hover:bg-gray-900 hover:text-white transition uppercase text-xs tracking-widest mb-3">View More Info</button>
+<button onclick="textRand('The Ponderosa')" class="block w-full text-center bg-gray-900 text-white py-3 rounded-lg font-bold hover:bg-black transition uppercase text-xs tracking-widest">Join Interest List</button>
+</div>
+</div>
+</div>
+</section>
+<!-- FINANCING -->
+<section class="bg-accent py-16 px-6 text-center text-white">
+<h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tighter uppercase">Easy Financing Through Rock Solid Funding</h2>
+<a href="https://rocksolidfunding.com" target="_blank" class="bg-gray-900 text-white px-12 py-4 rounded-full font-bold hover:bg-black transition inline-block uppercase text-sm tracking-widest">Apply For Financing Now</a>
+</section>
+<!-- PAST PROJECTS GALLERY -->
+<section id="projects" class="py-24 bg-gray-50 px-6 text-center">
+<div class="max-w-7xl mx-auto mb-12">
+<h2 class="text-4xl font-extrabold mb-4 text-gray-900 tracking-tighter uppercase">Past Projects</h2>
+<p class="text-gray-600">Click any project to see the gallery and full build story.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto text-left">
+<div class="bg-white rounded-lg overflow-hidden shadow-md project-card cursor-pointer" onclick="openProjectModal(0)">
+<div class="h-64 overflow-hidden bg-gray-200"><img src="images/69c2c29b81b374692dad43e6.jpg" class="w-full h-full object-cover"></div>
+<div class="p-6 text-center md:text-left"><h4 class="font-bold text-xl mb-2 text-gray-900 uppercase tracking-tighter">Lakeside Retreat</h4><p class="text-accent font-bold text-xs uppercase tracking-widest">View Gallery →</p></div>
+</div>
+<div class="bg-white rounded-lg overflow-hidden shadow-md project-card cursor-pointer" onclick="openProjectModal(1)">
+<div class="h-64 overflow-hidden bg-gray-200"><img src="images/69c2c578f462246873c00ad8.jpeg" class="w-full h-full object-cover"></div>
+<div class="p-6 text-center md:text-left"><h4 class="font-bold text-xl mb-2 text-gray-900 uppercase tracking-tighter">Hillside Home</h4><p class="text-accent font-bold text-xs uppercase tracking-widest">View Gallery →</p></div>
+</div>
+<div class="bg-white rounded-lg overflow-hidden shadow-md project-card cursor-pointer" onclick="openProjectModal(2)">
+<div class="h-64 overflow-hidden bg-gray-200"><img src="images/69c2c580f4622446a3c00c02.jpg" class="w-full h-full object-cover"></div>
+<div class="p-6 text-center md:text-left"><h4 class="font-bold text-xl mb-2 text-gray-900 uppercase tracking-tighter">Vacation Retreats</h4><p class="text-accent font-bold text-xs uppercase tracking-widest">View Gallery →</p></div>
+</div>
+<div class="bg-white rounded-lg overflow-hidden shadow-md project-card cursor-pointer" onclick="openProjectModal(3)">
+<div class="h-64 overflow-hidden bg-gray-200"><img src="images/69c2c646ec732675f1936f7d.jpeg" class="w-full h-full object-cover"></div>
+<div class="p-6 text-center md:text-left"><h4 class="font-bold text-xl mb-2 text-gray-900 uppercase tracking-tighter">Ranch Life</h4><p class="text-accent font-bold text-xs uppercase tracking-widest">View Gallery →</p></div>
+</div>
+<div class="bg-white rounded-lg overflow-hidden shadow-md project-card cursor-pointer" onclick="openProjectModal(4)">
+<div class="h-64 overflow-hidden bg-gray-200"><img src="images/69c2c58a336def8ad5b3276a.jpg" class="w-full h-full object-cover"></div>
+<div class="p-6 text-center md:text-left"><h4 class="font-bold text-xl mb-2 text-gray-900 uppercase tracking-tighter">Starter Cottage</h4><p class="text-accent font-bold text-xs uppercase tracking-widest">View Gallery →</p></div>
+</div>
+<div class="bg-white rounded-lg overflow-hidden shadow-md project-card cursor-pointer" onclick="openProjectModal(5)">
+<div class="h-64 overflow-hidden bg-gray-200"><img src="images/69c2c5917fba4b0984c80edd.jpg" class="w-full h-full object-cover"></div>
+<div class="p-6 text-center md:text-left"><h4 class="font-bold text-xl mb-2 text-gray-900 uppercase tracking-tighter">Rooted King</h4><p class="text-accent font-bold text-xs uppercase tracking-widest">View Gallery →</p></div>
+</div>
+</div>
+</section>
+<!-- PROJECT MODAL POPUP -->
+<div id="project-modal" class="modal-overlay">
+<div class="modal-card">
+<button onclick="closeModal('project-modal')" class="modal-close-btn text-gray-900">✕</button>
+<div class="image-stage">
+<div class="nav-btn prev-btn" onclick="prevSlide('project-modal')">❮</div>
+<div class="nav-btn next-btn" onclick="nextSlide('project-modal')">❯</div>
+<div id="project-counter" class="image-counter">1 / 1</div>
+<div id="project-slides-container" class="h-full w-full flex items-center justify-center bg-black"></div>
+</div>
+<div class="info-container scrollbar-hide">
+<div class="mb-auto">
+<h2 id="project-modal-title" class="text-3xl lg:text-4xl font-extrabold mb-4 text-gray-900 uppercase tracking-tighter">Project Title</h2>
+<div id="project-modal-tags" class="flex flex-wrap gap-2 mb-6"></div>
+<p id="project-modal-desc" class="text-gray-600 text-base lg:text-lg leading-relaxed mb-8"></p>
+<div id="modal-testimonial-container" class="hidden mb-8">
+<div class="bg-gray-900 p-8 rounded-2xl text-white relative overflow-hidden">
+<svg class="absolute top-4 left-4 w-12 h-12 text-white opacity-5" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C14.9124 8 14.017 7.10457 14.017 6V5C14.017 3.34315 15.3602 2 17.017 2H19.017C20.6739 2 22.017 3.34315 22.017 5V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM2.01697 21L2.01697 18C2.01697 16.8954 2.9124 16 4.01697 16H7.01697C7.56925 16 8.01697 15.5523 8.01697 15V9C8.01697 8.44772 7.56925 8 7.01697 8H4.01697C2.9124 8 2.01697 7.10457 2.01697 6V5C2.01697 3.34315 3.36012 2 5.01697 2H7.01697C8.67383 2 10.017 3.34315 10.017 5V15C10.017 18.3137 7.33065 21 4.01697 21H2.01697Z" /></svg>
+<p id="modal-testimonial-text" class="text-sm md:text-base italic leading-relaxed mb-4 relative z-10"></p>
+<p id="modal-testimonial-author" class="text-xs font-extrabold uppercase tracking-widest text-accent relative z-10"></p>
+</div>
+</div>
+<div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-8">
+<h5 class="font-bold uppercase text-[10px] tracking-widest text-gray-400 mb-3 text-left">Build Highlights</h5>
+<p id="project-modal-highlights" class="text-gray-800 font-bold italic text-sm lg:text-base leading-snug text-left"></p>
+</div>
+</div>
+<div class="mt-8 flex flex-col gap-3">
+<a id="project-modal-social-btn" href="#" target="_blank" class="hidden text-center border-2 border-gray-900 text-gray-900 py-3 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-gray-100 transition">View Build Video</a>
+<button onclick="textRand('the ' + document.getElementById('project-modal-title').textContent.replace(/^The /, '') + ' build')" class="block text-center bg-accent text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-orange-700 transition">Inquire About This Build</button>
+</div>
+</div>
+</div>
+</div>
+<!-- MODEL SPECS MODAL -->
+<div id="model-modal" class="modal-overlay">
+<div class="modal-card">
+<button onclick="closeModal('model-modal')" class="modal-close-btn text-gray-900 hover:scale-110 transition">✕</button>
+<div class="image-stage">
+<div class="nav-btn prev-btn" onclick="prevSlide('model-modal')">❮</div>
+<div class="nav-btn next-btn" onclick="nextSlide('model-modal')">❯</div>
+<div id="model-counter" class="image-counter">1 / 1</div>
+<div id="model-slides-container" class="h-full w-full flex items-center justify-center bg-black"></div>
+</div>
+<div class="info-container scrollbar-hide">
+<div class="mb-auto">
+<h2 id="model-modal-title" class="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-2 text-gray-900 uppercase tracking-tighter">Model Title</h2>
+<p id="model-modal-price" class="text-accent font-extrabold text-2xl mb-8">$0.00</p>
+<div class="spec-grid mb-8" id="model-modal-specs"></div>
+<div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-8">
+<h5 class="font-bold uppercase text-[10px] tracking-widest text-gray-400 mb-3">Residential Quality</h5>
+<p id="model-modal-features" class="text-gray-800 font-bold italic text-sm leading-snug"></p>
+</div>
+</div>
+<div class="mt-8">
+<button onclick="textRand(document.getElementById('model-modal-title').textContent)" class="block w-full text-center bg-gray-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black transition">Speak With Rand About This Model</button>
+</div>
+</div>
+</div>
+</div>
+<!-- FINAL CTA / CONTACT SECTION REBUILT -->
+<section id="contact" class="py-24 px-6 bg-gray-900 text-white text-center">
+<div class="max-w-4xl mx-auto">
+<h2 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tighter uppercase">Let's Build Something Great.</h2>
+<p class="text-gray-400 mb-12 max-w-xl mx-auto font-medium">No complicated forms. Reach out to Rand Roberts directly about custom shells, full builds, or pricing.</p>
+<div class="grid md:grid-cols-3 gap-4">
+<a href="sms:2083176732" class="contact-btn bg-accent hover:bg-orange-700"><span class="contact-title">Text Rand</span><span class="contact-sub">208-317-6732</span></a>
+<a href="tel:208-317-6732" class="contact-btn border border-gray-700 hover:bg-gray-800"><span class="contact-title">Call Rand</span><span class="contact-sub">208-317-6732</span></a>
+<a href="mailto:MRTinyHouses@gmail.com" class="contact-btn border border-gray-700 hover:bg-gray-800"><span class="contact-title">Email</span><span class="contact-sub">MRTinyHouses@gmail.com</span></a>
+</div>
+<p class="mt-8 text-xs uppercase tracking-widest text-gray-500 font-bold">Clifton, Idaho</p>
+</div>
+</section>
+
+
+
+<footer class="bg-gray-900 py-12 text-center text-gray-500 text-sm">
+<p class="text-white font-bold mb-2 tracking-widest uppercase">M.R. Tiny Houses</p>
+<p>© 2026 M.R. Tiny Houses. All Rights Reserved. | Website By Wingmen Marketing</p>
+</footer>
+</main>
+<script>
+const projects = [
+{
+title: "Lakeside Retreat",
+desc: "Inspired by an incredible 89-year-old visionary, Lakeside was designed as a family retreat on Bear Lake. It features a unique double staircase and massive sliding glass doors for maximum Idaho lake-front enjoyment.",
+tags: ["Bear Lake", "Sleeps 4", "Family Retreat"],
+highlights: "Double staircase, sliding glass doors, and maximum natural light.",
+testimonial: "Rand Roberts built a Tiny House shell, electrical, plumbing and insulation for me in 2020. Our family completed the interior. Would I work with Rand again? Absolutely YES! He was fastidious during the planning and just as careful with the build. He kept the communication open and met, or was early on every deadline. No surprises on price, it was exactly as bid. It is still serving me well at Bear Lake, UT.",
+testimonialAuthor: "Pat Preston",
+socialUrl: null,
+images: ["images/69c2c29b81b374692dad43e6.jpg", "images/69c2c29b81b3747d04ad43e5.jpg", "images/69c2c29b75ee0514c9685112.jpg", "images/69c2c29b75ee055f4d685111.jpg", "images/69c2c29bf38374e676f81560.jpg", "images/69c2c29bf383745e23f8155f.jpg", "images/69c2c29b284ace12e57f2f07.jpg", "images/69c2c29b88a056a2c2159b04.jpg", "images/69c2c29b25d182986e62cde1.jpg", "images/69c2c29b88a056135e159b03.jpg", "images/69c2c29b25d18226ed62cde2.jpg", "images/69c2c29b75ee05f367685113.jpg"]
+},
+{
+title: "Hillside Home",
+desc: "Built to escape the aggressive real estate market, this family lived in their tiny house while constructing their permanent home on the same property, saving them tens of thousands of dollars.",
+tags: ["Full-Time Living", "Sleeps 4", "Cost Saver"],
+highlights: "Served as primary residence during construction; now a luxury guest home.",
+socialUrl: "https://youtube.com/watch?v=xVmCIEFwqJ8&si=Yasd5ztZ2Mah_uhy",
+images: ["images/69c2c578f462246873c00ad8.jpeg", "images/69c2c577d96b38b12617dadb.jpg", "images/69c2c577fe4d0deb01cab192.jpg", "images/69c2c577ec73264e35934db0.jpg", "images/69c2c57725d182536d6346b8.jpg"]
+},
+{
+title: "Vacation Retreats",
+desc: "A pair of builds located in Driggs, Idaho at the base of the Tetons. Designed for the adventure rental market with bunk beds to maximize sleeping capacity.",
+tags: ["Driggs, ID", "Sleeps 6", "Rental Market"],
+highlights: "Features custom bunk beds; sleeps 6 comfortably.",
+socialUrl: null,
+images: ["images/69c2c580f4622446a3c00c02.jpg", "images/69c2c5804d943d26be8c977c.jpg", "images/69c2c580ec732665f3934e8c.jpg", "images/69c2c580ec732649c1934e8b.jpg", "images/69c2c58025d18289846347c4.jpg", "images/69c2c5806cdc477ef72e6dcb.jpg", "images/69c2c58081b374c8bbadbcd2.jpg", "images/69c2c580adec712e4d4a7670.jpg", "images/69c2c5804d943da97a8c977b.jpg", "images/69c2c5806cdc47798a2e6dcc.jpg", "images/69c2c580f462242ee5c00c01.jpg", "images/69c2c5807fba4b248ac80cf2.jpg", "images/69c2c5807fba4b7056c80cf1.jpg"]
+},
+{
+title: "The Ranch Cabin",
+desc: "Serving as a horse guide cabin in Island Park, this unit is tested every winter. Even with nearly 4 feet of solid snowpack on the roof, it remains a sturdy and reliable summer retreat.",
+tags: ["Island Park", "Sleeps 4", "Extreme Grade"],
+highlights: "Currently in its 4th year of heavy winter service.",
+images: ["images/69c2c646ec732675f1936f7d.jpeg", "images/69c2c64675ee05337f68ec51.jpeg", "images/69c2c646342aa80f8a11f20a.jpg", "images/69c2c64625d182cddb6369fa.jpeg", "images/69c2c6464d943decd98cb9f6.jpg", "images/69c2c646fe4d0d61cecad342.jpg", "images/69c2c6467fba4bb4d0c82f85.jpg", "images/69c2c6467fba4b00ebc82f84.jpg", "images/69c2c6464d943df3138cb9f7.jpg", "images/69c2c64681b3745a16addcde.jpg", "images/69c2c646fe4d0d3dd9cad341.jpg", "images/69c2c6467fba4b10efc82f83.jpg", "images/69c2c64621b906d193454ef3.jpg"]
+},
+{
+title: "Starter Cottage",
+desc: "This shell build gave a young couple the perfect head start. We provided the frame, windows, roof, and roughed-in systems, allowing them to finish the interior themselves.",
+tags: ["Shell Build", "Sleeps 4", "DIY Friendly"],
+highlights: "Based on our popular Spruce model framework.",
+images: ["images/69c2c58a336def8ad5b3276a.jpg", "images/69c2c58aadec7103594a77bf.jpg", "images/69c2c58a75ee056fb868cb44.jpg"]
+},
+{
+title: "The Rooted King",
+desc: "The Rooted King is our largest build yet. It features a custom sky window and was built to provide a permanent dwelling for a young mother.",
+tags: ["Max Size", "Sleeps 3", "Sky Window"],
+highlights: "Our most used model with permanent dwelling capabilities.",
+images: ["images/69c2c5917fba4b0984c80edd.jpg", "images/69c2c59139e3092433694d06.jpg", "images/69c2c59175ee05357368cbdc.jpg", "images/69c2c591f462247aa1c00e2e.jpg", "images/69c2c591ec732616c493506c.jpg", "images/69c2c591adec71720e4a788c.jpg", "images/69c2c591342aa824d311cfc2.jpg", "images/69c2c5917fba4b202cc80edc.jpg"]
+}
+];
+const modelSpecs = [
+{
+title: "The Spruce", price: "$99,000",
+features: "2lb Structural Spray Foam Insulation, Heavy Snow Load Rated (Tested @ 60 lb PSF), Convenient Stackable Washer/Dryer Hookups, 20-Gallon Water Heater.",
+images: [
+"images/69691785d01e748c63a6220b.png",
+"images/69c410b99f0ca4856edb88b9.jpg",
+"images/69c410b9a5f609cd2d40ccd3.jpg",
+"images/69c410b95e43626bf5d5777d.jpg",
+"images/69c410babd5bfa3baccde3bc.jpg",
+"images/69c410b97c126b7438928ca7.jpg",
+"images/69c410b9e721535ae260d003.jpg",
+"images/69c410b98e4b6d12915bec5f.jpg",
+"images/69c410b9c14403576e39598d.jpg",
+"images/69c410b9d0b6d39174a61193.jpg",
+"images/69c410b957fb3bbdb9fc19c9.jpg",
+"images/69c410b961883f65ee498ad0.jpg",
+"images/69c410b957fb3b6a11fc19c4.jpg",
+"images/69c410b9421e240c544dea02.jpg",
+"images/69c410b9a5f60945ff40ccd4.jpg",
+"images/696915f6d848085b22f72318.png"
+],
+specs: [{label:"Sq Ft", val:"427 Total"}, {label:"Dimensions", val:"32' L x 8.5' W"}, {label:"Lofts", val:"Dual"}, {label:"Snow Load", val:"60 lb PSF"}]
+},
+{
+title: "The Apache", price: "$89,000",
+features: "High-Rigidity insulation, optimized for road-worthy travel and high-altitude ID climates.",
+images: [
+"images/69c410ce76c882b4173cd528.jpg",
+"images/69c410ce76c8825b7b3cd529.jpeg",
+"images/69c410ce87e10122ca1daf9a.jpeg",
+"images/69c410ce9f0ca46206db8a49.jpeg",
+"images/69c410ce5e43624d18d57936.jpg",
+"images/69c410ced8facff39111ffb1.jpg"
+],
+specs: [{label:"Sq Ft", val:"366 Total"}, {label:"Dimensions", val:"28' L x 8.5' W"}, {label:"Lofts", val:"Two Lofts"}, {label:"Snow Load", val:"60 lb PSF"}]
+},
+{
+title: "The Ponderosa", price: "Pricing TBA",
+features: "Over-Axle Engineering eliminates interior wheel wells. Ideal for ADUs or permanent guest suites.",
+images: ["images/696915f6d8480848b1f72319.png"],
+specs: [{label:"Style", val:"Rooted Single-Story"}, {label:"Frame", val:"Steel Skid/Axle"}, {label:"Snow Load", val:"60 lb PSF"}]
+}
+];
+let currentProjectSlide = 0;
+let currentModelSlide = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+function openProjectModal(index) {
+currentProjectSlide = 0;
+const project = projects[index];
+document.getElementById('project-modal-title').innerText = project.title;
+document.getElementById('project-modal-desc').innerText = project.desc;
+document.getElementById('project-modal-highlights').innerText = project.highlights;
+const testContainer = document.getElementById('modal-testimonial-container');
+if(project.testimonial) {
+document.getElementById('modal-testimonial-text').innerText = project.testimonial;
+document.getElementById('modal-testimonial-author').innerText = project.testimonialAuthor;
+testContainer.classList.remove('hidden');
+} else {
+testContainer.classList.add('hidden');
+}
+const socialBtn = document.getElementById('project-modal-social-btn');
+if(project.socialUrl) { socialBtn.href = project.socialUrl; socialBtn.classList.remove('hidden'); } else { socialBtn.classList.add('hidden'); }
+const tagContainer = document.getElementById('project-modal-tags'); tagContainer.innerHTML = '';
+project.tags.forEach(tag => { const span = document.createElement('span'); span.className = 'bg-accent text-white px-3 py-1 rounded text-[10px] font-bold tracking-widest uppercase'; span.innerText = tag; tagContainer.appendChild(span); });
+const container = document.getElementById('project-slides-container'); container.innerHTML = '';
+project.images.forEach((img, i) => { const el = document.createElement('img'); el.src = img; el.className = `carousel-slide ${i === 0 ? 'active' : ''}`; el.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false); el.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe('project-modal'); }, false); container.appendChild(el); });
+updateCounter('project-modal', project.images.length, currentProjectSlide);
+document.getElementById('project-modal').style.display = 'flex';
+document.body.style.overflow = 'hidden';
+}
+function openModelModal(index) {
+currentModelSlide = 0;
+const model = modelSpecs[index];
+document.getElementById('model-modal-title').innerText = model.title;
+document.getElementById('model-modal-price').innerText = model.price;
+document.getElementById('model-modal-features').innerText = model.features;
+const specContainer = document.getElementById('model-modal-specs'); specContainer.innerHTML = '';
+model.specs.forEach(s => { const div = document.createElement('div'); div.className = 'spec-item text-left'; div.innerHTML = `<span class="spec-label">${s.label}</span><span class="spec-val">${s.val}</span>`; specContainer.appendChild(div); });
+const container = document.getElementById('model-slides-container'); container.innerHTML = '';
+model.images.forEach((img, i) => { const el = document.createElement('img'); el.src = img; el.className = `carousel-slide ${i === 0 ? 'active' : ''}`; el.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false); el.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe('model-modal'); }, false); container.appendChild(el); });
+updateCounter('model-modal', model.images.length, currentModelSlide);
+document.getElementById('model-modal').style.display = 'flex';
+document.body.style.overflow = 'hidden';
+}
+function textRand(modelName) {
+let message = "Hi Rand! I'm interested in building a tiny home.";
+if (modelName === 'The Ponderosa') message = "Hi Rand! I'd like to join the interest list for The Ponderosa.";
+else if (modelName) message = `Hi Rand! I'm interested in ${modelName}. Can you tell me more?`;
+window.location.href = 'sms:2083176732?&body=' + encodeURIComponent(message);
+}
+
+function updateCounter(id, length, current) {
+const counterId = id === 'project-modal' ? 'project-counter' : 'model-counter';
+const el = document.getElementById(counterId);
+if (el) el.innerText = `${current + 1} / ${length}`;
+}
+function handleSwipe(id) { if (touchEndX < touchStartX - 50) nextSlide(id); if (touchEndX > touchStartX + 50) prevSlide(id); }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
+function nextSlide(id) {
+const containerId = id === 'project-modal' ? 'project-slides-container' : 'model-slides-container';
+const slides = document.getElementById(containerId).querySelectorAll('.carousel-slide');
+if (slides.length <= 1) return;
+let current = id === 'project-modal' ? currentProjectSlide : currentModelSlide;
+slides[current].classList.remove('active');
+current = (current + 1) % slides.length;
+slides[current].classList.add('active');
+if(id === 'project-modal') currentProjectSlide = current; else currentModelSlide = current;
+updateCounter(id, slides.length, current);
+}
+function prevSlide(id) {
+const containerId = id === 'project-modal' ? 'project-slides-container' : 'model-slides-container';
+const slides = document.getElementById(containerId).querySelectorAll('.carousel-slide');
+if (slides.length <= 1) return;
+let current = id === 'project-modal' ? currentProjectSlide : currentModelSlide;
+slides[current].classList.remove('active');
+current = (current - 1 + slides.length) % slides.length;
+slides[current].classList.add('active');
+if(id === 'project-modal') currentProjectSlide = current; else currentModelSlide = current;
+updateCounter(id, slides.length, current);
+}
+</script>
+</body>
+</html>
